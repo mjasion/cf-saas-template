@@ -85,8 +85,8 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          CLOUDFLARE_API_TOKEN: 'op://Infrastructure/CloudFlare - Deploy Workers/credential'
-          CLOUDFLARE_EMAIL: 'op://Infrastructure/CloudFlare - Deploy Workers/username'
+          CLOUDFLARE_API_TOKEN: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/credential'
+          CLOUDFLARE_EMAIL: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/username'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
@@ -286,8 +286,8 @@ jobs:
           export-env: true
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          CLOUDFLARE_API_TOKEN: 'op://Infrastructure/CloudFlare - Deploy Workers/credential'
-          CLOUDFLARE_EMAIL: 'op://Infrastructure/CloudFlare - Deploy Workers/username'
+          CLOUDFLARE_API_TOKEN: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/credential'
+          CLOUDFLARE_EMAIL: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/username'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
