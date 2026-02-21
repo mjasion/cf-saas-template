@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>mjasion/renovate-base",
+    "schedule:monthly",
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": "at any time",
+    "automerge": true,
+    "labels": ["security", "renovate"]
+  },
+  "packageRules": [
+    {
+      "description": "Group ESLint ecosystem updates into one PR",
+      "groupName": "eslint",
+      "matchPackageNames": [
+        "eslint",
+        "@eslint/js",
+        "typescript-eslint",
+        "eslint-plugin-react",
+        "eslint-plugin-react-hooks"
+      ]
+    },
+    {
+      "description": "Security updates - high priority",
+      "matchDatasources": ["npm"],
+      "isVulnerabilityAlert": true,
+      "prPriority": 10
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cf-saas-template-api",
+  "main": "./src/index.ts",
+  "compatibility_date": "2026-01-24",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "placement": {
+    "mode": "smart"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true
+    }
+  },
+  "vars": {
+    "ACCESS_TOKEN_EXPIRES_IN": "15m",
+    "REFRESH_TOKEN_EXPIRES_IN": "30d",
+    "APP_COOKIE_PREFIX": "app"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cf-saas-template",
+      "database_id": "LOCAL_DB_ID",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SESSIONS",
+      "id": "LOCAL_KV_ID"
+    }
+  ]
+  // Environments are created by scripts/setup-env.sh
+  // Example:
+  // "env": {
+  //   "main": { ... },
+  //   "production": { ... }
+  // }
+}

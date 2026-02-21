@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.output/
+.wrangler/
+.dev.vars
+*.local
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+blob_report/

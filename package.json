@@ -1,0 +1,47 @@
+{
+  "name": "cf-saas-template",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Cloudflare SaaS template with TanStack Start, Hono, Drizzle, and shadcn",
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c blue,green \"pnpm dev:backend\" \"pnpm dev:frontend\"",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "build": "pnpm run build:backend && pnpm run build:frontend",
+    "build:backend": "pnpm --filter backend build",
+    "build:frontend": "pnpm --filter frontend build",
+    "deploy": "pnpm run deploy:backend && pnpm run deploy:frontend",
+    "deploy:backend": "pnpm --filter backend deploy",
+    "deploy:frontend": "pnpm --filter frontend deploy",
+    "db:generate": "pnpm --filter backend db:generate",
+    "db:migrate": "pnpm --filter backend db:migrate",
+    "db:migrate:prod": "pnpm --filter backend db:migrate:prod",
+    "db:seed": "pnpm --filter backend db:seed",
+    "db:reset": "pnpm --filter backend db:reset",
+    "db:studio": "pnpm --filter backend db:studio",
+    "typecheck": "pnpm --filter backend typecheck && pnpm --filter frontend typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:e2e": "playwright test --headed",
+    "test:e2e:headless": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.58.2",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.8.1",
+    "typescript-eslint": "^8.56.0"
+  },
+  "packageManager": "pnpm@10.29.2",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
