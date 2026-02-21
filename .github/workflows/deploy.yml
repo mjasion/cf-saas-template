@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+  CLOUDFLARE_ACCOUNT_ID: 4be376299ea6f3804d6b89d661d2e30a
 
 jobs:
   # =============================================================================
