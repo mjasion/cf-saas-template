@@ -42,8 +42,10 @@ function LoginPage() {
       })
 
       if (!res.ok) {
-        const data = await res.json().catch(() => null)
-        setError(data?.error || data?.message || 'Invalid email or password.')
+        const data = await res.json().catch(() => null) as { error?: string | { message?: string }; message?: string } | null
+        const err = data?.error
+        const msg = typeof err === 'string' ? err : err?.message ?? data?.message
+        setError(msg || 'Invalid email or password.')
         return
       }
 

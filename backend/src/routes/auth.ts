@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
+import type { ValidationTargets } from 'hono';
+import { z, type ZodType } from 'zod';
 import { eq } from 'drizzle-orm';
 import type { Bindings } from '../index.js';
 import { createDb } from '../db/index.js';
@@ -28,13 +29,26 @@ function getCookiePrefix(env: Bindings): string {
   return env.APP_COOKIE_PREFIX || 'app';
 }
 
+/** zValidator wrapper that returns `{ error: "..." }` on failure instead of raw Zod issues. */
+function jsonValidator<T extends ZodType>(schema: T) {
+  return zValidator('json' as keyof ValidationTargets, schema, (result, c) => {
+    if (!result.success) {
+      const messages = result.error.issues.map((i) => i.message);
+      return c.json({ error: messages.join('. ') }, 400);
+    }
+  });
+}
+
+// Accepts user@host (no TLD required) for local dev compatibility
+const email = z.string().regex(/^[^\s@]+@[^\s@]+$/, 'Please enter a valid email address');
+
 // POST /a/auth/register
 const registerSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(5).max(128),
+  email,
+  password: z.string().min(5, 'Password must be at least 5 characters').max(128),
 });
 
-app.post('/register', registerRateLimit, zValidator('json', registerSchema), async (c) => {
+app.post('/register', registerRateLimit, jsonValidator(registerSchema), async (c) => {
   const { email, password } = c.req.valid('json');
   const prefix = getCookiePrefix(c.env);
 
@@ -89,11 +103,11 @@ app.post('/register', registerRateLimit, zValidator('json', registerSchema), asy
 
 // POST /a/auth/login
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email,
+  password: z.string().min(1, 'Password is required'),
 });
 
-app.post('/login', loginRateLimit, zValidator('json', loginSchema), async (c) => {
+app.post('/login', loginRateLimit, jsonValidator(loginSchema), async (c) => {
   const { email, password } = c.req.valid('json');
   const prefix = getCookiePrefix(c.env);
 
