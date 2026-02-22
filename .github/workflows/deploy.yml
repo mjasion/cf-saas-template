@@ -264,114 +264,113 @@ jobs:
             }
 
   # =============================================================================
-  # Deploy Production Job - Deploys to production environment
-  # Only runs on main branch after staging deploy succeeds
+  # Deploy Production Job - DISABLED (running as local/dev only)
   # =============================================================================
-  deploy-production:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: [release, deploy]
-    if: github.ref_name == 'main'
-    permissions:
-      contents: write
-      deployments: write
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Load secrets from 1Password
-        uses: 1password/load-secrets-action@8d0d610af187e78a2772c2d18d627f4c52d3fbfb # v3
-        with:
-          export-env: true
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          CLOUDFLARE_API_TOKEN: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/credential'
-          CLOUDFLARE_EMAIL: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/username'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
-        with:
-          node-version: 24
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Cache wrangler
-        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
-        with:
-          path: ~/.pnpm-global
-          key: wrangler-${{ runner.os }}-latest
-          restore-keys: wrangler-${{ runner.os }}-
-
-      - name: Install wrangler
-        run: pnpm add -g wrangler
-
-      - name: Deploy
-        id: deploy
-        env:
-          APP_VERSION: ${{ needs.release.outputs.new_tag }}
-        run: |
-          set -o pipefail
-          OUTPUT=$(./scripts/deploy.sh production 2>&1 | tee /dev/stderr)
-
-          BACKEND_GZIP=$(echo "$OUTPUT" | grep 'BACKEND_GZIP_SIZE=' | sed 's/BACKEND_GZIP_SIZE=//' || echo "N/A")
-          BACKEND_STARTUP=$(echo "$OUTPUT" | grep 'BACKEND_STARTUP_TIME=' | sed 's/BACKEND_STARTUP_TIME=//' || echo "N/A")
-          FRONTEND_GZIP=$(echo "$OUTPUT" | grep 'FRONTEND_GZIP_SIZE=' | sed 's/FRONTEND_GZIP_SIZE=//' || echo "N/A")
-          FRONTEND_STARTUP=$(echo "$OUTPUT" | grep 'FRONTEND_STARTUP_TIME=' | sed 's/FRONTEND_STARTUP_TIME=//' || echo "N/A")
-
-          echo "backend_gzip=$BACKEND_GZIP" >> $GITHUB_OUTPUT
-          echo "backend_startup=$BACKEND_STARTUP" >> $GITHUB_OUTPUT
-          echo "frontend_gzip=$FRONTEND_GZIP" >> $GITHUB_OUTPUT
-          echo "frontend_startup=$FRONTEND_STARTUP" >> $GITHUB_OUTPUT
-
-      - name: Deployment summary
-        run: |
-          source ./scripts/lib/utils.sh
-          DOMAIN=$(get_env_domain "production")
-          echo "## Production Deployment Complete" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Resource | URL |" >> $GITHUB_STEP_SUMMARY
-          echo "|----------|-----|" >> $GITHUB_STEP_SUMMARY
-          echo "| Frontend | https://${DOMAIN} |" >> $GITHUB_STEP_SUMMARY
-          echo "| API | https://${DOMAIN}/a/ |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Worker Metrics" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Worker | Compressed Size | Startup Time |" >> $GITHUB_STEP_SUMMARY
-          echo "|--------|-----------------|--------------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Backend | ${{ steps.deploy.outputs.backend_gzip }} | ${{ steps.deploy.outputs.backend_startup }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Frontend | ${{ steps.deploy.outputs.frontend_gzip }} | ${{ steps.deploy.outputs.frontend_startup }} |" >> $GITHUB_STEP_SUMMARY
-
-      - name: Comment on commit
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
-        with:
-          script: |
-            const sha = '${{ github.sha }}';
-            const backendGzip = '${{ steps.deploy.outputs.backend_gzip }}';
-            const backendStartup = '${{ steps.deploy.outputs.backend_startup }}';
-            const frontendGzip = '${{ steps.deploy.outputs.frontend_gzip }}';
-            const frontendStartup = '${{ steps.deploy.outputs.frontend_startup }}';
-            const newTag = '${{ needs.release.outputs.new_tag }}';
-
-            const body = `## Deployed to \`production\` (${newTag})
-
-            ### Worker Metrics
-
-            | Worker | Compressed Size | Startup Time |
-            |--------|-----------------|--------------|
-            | Backend (cf-saas-template-api) | ${backendGzip} | ${backendStartup} |
-            | Frontend (cf-saas-template) | ${frontendGzip} | ${frontendStartup} |
-
-            **Workflow:** [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
-
-            await github.rest.repos.createCommitComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              commit_sha: sha,
-              body: body
-            });
+  # deploy-production:
+  #   name: Deploy to Production
+  #   runs-on: ubuntu-latest
+  #   needs: [release, deploy]
+  #   if: github.ref_name == 'main'
+  #   permissions:
+  #     contents: write
+  #     deployments: write
+  #
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+  #
+  #     - name: Load secrets from 1Password
+  #       uses: 1password/load-secrets-action@8d0d610af187e78a2772c2d18d627f4c52d3fbfb # v3
+  #       with:
+  #         export-env: true
+  #       env:
+  #         OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+  #         CLOUDFLARE_API_TOKEN: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/credential'
+  #         CLOUDFLARE_EMAIL: 'op://f2lxsymluivy6izzeopio5dxym/CloudFlare - Deploy Workers/username'
+  #
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+  #       with:
+  #         node-version: 24
+  #         cache: 'pnpm'
+  #
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile
+  #
+  #     - name: Cache wrangler
+  #       uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5
+  #       with:
+  #         path: ~/.pnpm-global
+  #         key: wrangler-${{ runner.os }}-latest
+  #         restore-keys: wrangler-${{ runner.os }}-
+  #
+  #     - name: Install wrangler
+  #       run: pnpm add -g wrangler
+  #
+  #     - name: Deploy
+  #       id: deploy
+  #       env:
+  #         APP_VERSION: ${{ needs.release.outputs.new_tag }}
+  #       run: |
+  #         set -o pipefail
+  #         OUTPUT=$(./scripts/deploy.sh production 2>&1 | tee /dev/stderr)
+  #
+  #         BACKEND_GZIP=$(echo "$OUTPUT" | grep 'BACKEND_GZIP_SIZE=' | sed 's/BACKEND_GZIP_SIZE=//' || echo "N/A")
+  #         BACKEND_STARTUP=$(echo "$OUTPUT" | grep 'BACKEND_STARTUP_TIME=' | sed 's/BACKEND_STARTUP_TIME=//' || echo "N/A")
+  #         FRONTEND_GZIP=$(echo "$OUTPUT" | grep 'FRONTEND_GZIP_SIZE=' | sed 's/FRONTEND_GZIP_SIZE=//' || echo "N/A")
+  #         FRONTEND_STARTUP=$(echo "$OUTPUT" | grep 'FRONTEND_STARTUP_TIME=' | sed 's/FRONTEND_STARTUP_TIME=//' || echo "N/A")
+  #
+  #         echo "backend_gzip=$BACKEND_GZIP" >> $GITHUB_OUTPUT
+  #         echo "backend_startup=$BACKEND_STARTUP" >> $GITHUB_OUTPUT
+  #         echo "frontend_gzip=$FRONTEND_GZIP" >> $GITHUB_OUTPUT
+  #         echo "frontend_startup=$FRONTEND_STARTUP" >> $GITHUB_OUTPUT
+  #
+  #     - name: Deployment summary
+  #       run: |
+  #         source ./scripts/lib/utils.sh
+  #         DOMAIN=$(get_env_domain "production")
+  #         echo "## Production Deployment Complete" >> $GITHUB_STEP_SUMMARY
+  #         echo "" >> $GITHUB_STEP_SUMMARY
+  #         echo "| Resource | URL |" >> $GITHUB_STEP_SUMMARY
+  #         echo "|----------|-----|" >> $GITHUB_STEP_SUMMARY
+  #         echo "| Frontend | https://${DOMAIN} |" >> $GITHUB_STEP_SUMMARY
+  #         echo "| API | https://${DOMAIN}/a/ |" >> $GITHUB_STEP_SUMMARY
+  #         echo "" >> $GITHUB_STEP_SUMMARY
+  #         echo "### Worker Metrics" >> $GITHUB_STEP_SUMMARY
+  #         echo "" >> $GITHUB_STEP_SUMMARY
+  #         echo "| Worker | Compressed Size | Startup Time |" >> $GITHUB_STEP_SUMMARY
+  #         echo "|--------|-----------------|--------------|" >> $GITHUB_STEP_SUMMARY
+  #         echo "| Backend | ${{ steps.deploy.outputs.backend_gzip }} | ${{ steps.deploy.outputs.backend_startup }} |" >> $GITHUB_STEP_SUMMARY
+  #         echo "| Frontend | ${{ steps.deploy.outputs.frontend_gzip }} | ${{ steps.deploy.outputs.frontend_startup }} |" >> $GITHUB_STEP_SUMMARY
+  #
+  #     - name: Comment on commit
+  #       uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+  #       with:
+  #         script: |
+  #           const sha = '${{ github.sha }}';
+  #           const backendGzip = '${{ steps.deploy.outputs.backend_gzip }}';
+  #           const backendStartup = '${{ steps.deploy.outputs.backend_startup }}';
+  #           const frontendGzip = '${{ steps.deploy.outputs.frontend_gzip }}';
+  #           const frontendStartup = '${{ steps.deploy.outputs.frontend_startup }}';
+  #           const newTag = '${{ needs.release.outputs.new_tag }}';
+  #
+  #           const body = `## Deployed to \`production\` (${newTag})
+  #
+  #           ### Worker Metrics
+  #
+  #           | Worker | Compressed Size | Startup Time |
+  #           |--------|-----------------|--------------|
+  #           | Backend (cf-saas-template-api) | ${backendGzip} | ${backendStartup} |
+  #           | Frontend (cf-saas-template) | ${frontendGzip} | ${frontendStartup} |
+  #
+  #           **Workflow:** [View logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+  #
+  #           await github.rest.repos.createCommitComment({
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             commit_sha: sha,
+  #             body: body
+  #           });

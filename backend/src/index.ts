@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { errorHandler } from "./middleware/error-handler.js";
 import authRoutes from "./routes/auth.js";
+import seedRoutes from "./routes/seed.js";
 
 // Cloudflare Worker bindings type
 export type Bindings = {
@@ -70,6 +71,7 @@ app.get("/a/config", (c) => {
 
 // Mount API routes
 app.route("/a/auth", authRoutes);
+app.route("/a/seed", seedRoutes);
 
 // Export type for frontend consumption
 export type AppType = typeof app;

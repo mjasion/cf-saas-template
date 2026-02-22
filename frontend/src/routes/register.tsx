@@ -33,8 +33,8 @@ function RegisterPage() {
       return
     }
 
-    if (password.length < 5) {
-      setError('Password must be at least 5 characters.')
+    if (password.length < 1) {
+      setError('Password is required.')
       return
     }
 
@@ -98,7 +98,7 @@ function RegisterPage() {
             id="password"
             name="password"
             type="password"
-            placeholder="At least 8 characters"
+            placeholder="Enter a password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"

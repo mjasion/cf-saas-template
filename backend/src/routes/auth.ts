@@ -45,7 +45,7 @@ const email = z.string().regex(/^[^\s@]+@[^\s@]+$/, 'Please enter a valid email 
 // POST /a/auth/register
 const registerSchema = z.object({
   email,
-  password: z.string().min(5, 'Password must be at least 5 characters').max(128),
+  password: z.string().min(1, 'Password is required').max(128),
 });
 
 app.post('/register', registerRateLimit, jsonValidator(registerSchema), async (c) => {

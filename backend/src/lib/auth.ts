@@ -15,8 +15,8 @@ const ARGON2_PARAMS = {
 };
 
 export async function hashPassword(password: string): Promise<string> {
-  if (!password || password.length < 5) {
-    throw new Error('Password must be at least 5 characters long');
+  if (!password || password.length < 1) {
+    throw new Error('Password is required');
   }
 
   const salt = randomBytes(16);
@@ -68,8 +68,8 @@ export function validatePasswordStrength(password: string): {
     return { valid: false, errors };
   }
 
-  if (password.length < 5) {
-    errors.push('Password must be at least 5 characters');
+  if (password.length < 1) {
+    errors.push('Password is required');
   }
 
   if (password.length > 128) {

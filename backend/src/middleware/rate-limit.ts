@@ -68,12 +68,12 @@ export function rateLimit(config: RateLimitConfig) {
 
 export const loginRateLimit = rateLimit({
   windowMs: 60 * 1000,
-  maxRequests: 10,
+  maxRequests: 1000,
   keyPrefix: 'rate_limiting:login',
 });
 
 export const registerRateLimit = rateLimit({
   windowMs: 60 * 1000,
-  maxRequests: 5,
+  maxRequests: 1000,
   keyPrefix: 'rate_limiting:register',
 });
