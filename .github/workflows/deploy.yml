@@ -11,6 +11,7 @@ concurrency:
 
 env:
   CLOUDFLARE_ACCOUNT_ID: 4be376299ea6f3804d6b89d661d2e30a
+  BASE_DOMAIN: cf-saas-template.mjasion.dev
 
 jobs:
   # =============================================================================
