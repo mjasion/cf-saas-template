@@ -3,6 +3,13 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { type LogoConfig, getIconByName, DEFAULT_LOGO_CONFIG } from './logo-config'
 import { Zap } from 'lucide-react'
 
+// Lazy-imported on themes page only — resolved by the caller
+let _getIconComponent: ((name: string) => import('lucide-react').LucideIcon | undefined) | null = null
+
+export function setIconComponentResolver(fn: (name: string) => import('lucide-react').LucideIcon | undefined) {
+  _getIconComponent = fn
+}
+
 function parseGradient(value: string): { angle: number; stops: { color: string; offset: string }[] } {
   // Parse "linear-gradient(135deg, #a, #b)" or "linear-gradient(135deg, #a 20%, #b 80%)"
   const match = value.match(/linear-gradient\((\d+)deg,\s*(.+)\)/)
@@ -51,7 +58,8 @@ export function generateLogoSvg(config: LogoConfig, size: number = 512): string 
   const iconSize = Math.round(size * 0.5)
   const iconOffset = Math.round((size - iconSize) / 2)
 
-  const IconComponent = getIconByName(config.icon) || Zap
+  const cleanIcon = config.icon.replace(/^Lucide/, '')
+  const IconComponent = getIconByName(cleanIcon) || _getIconComponent?.(cleanIcon) || Zap
   const iconMarkup = renderToStaticMarkup(
     createElement(IconComponent, {
       width: iconSize,

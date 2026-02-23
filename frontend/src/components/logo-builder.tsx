@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Download, RotateCcw } from 'lucide-react'
+import { useState, useMemo, useRef, useEffect } from 'react'
+import { Download, RotateCcw, Search, X } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLogo } from '@/lib/use-logo'
 import {
@@ -9,14 +10,18 @@ import {
   type LogoBgType,
   type IconEntry,
 } from '@/lib/logo-config'
-import { downloadSvg, downloadPng } from '@/lib/logo-export'
+import { downloadSvg, downloadPng, setIconComponentResolver } from '@/lib/logo-export'
+import { searchIcons, getIconComponent, getSearchSuggestions } from '@/lib/icon-registry'
 import { LogoMark } from '@/components/ui/logo'
 import { BentoGrid, BentoCard } from '@/components/bento'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-const ICON_CATEGORIES = ['all', 'abstract', 'business', 'tech', 'nature'] as const
+// Wire up the icon registry resolver for SVG/PNG exports
+setIconComponentResolver(getIconComponent)
+
+const ICON_CATEGORIES = ['all', 'abstract', 'business', 'tech', 'nature', 'communication', 'security', 'media', 'travel', 'food', 'home'] as const
 type IconCategory = (typeof ICON_CATEGORIES)[number]
 
 const SHAPES: { value: LogoShape; label: string; preview: string }[] = [
@@ -31,17 +36,55 @@ const BG_TABS: { value: LogoBgType; label: string }[] = [
   { value: 'theme', label: 'Theme' },
 ]
 
+interface SearchResult {
+  name: string
+  component: LucideIcon
+}
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(timer)
+  }, [value, delay])
+  return debounced
+}
+
 export function LogoBuilder() {
   const { config, setConfig, resetConfig } = useLogo()
   const [iconFilter, setIconFilter] = useState<IconCategory>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedQuery = useDebounce(searchQuery, 200)
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
-  const filteredIcons: IconEntry[] =
-    iconFilter === 'all'
-      ? CURATED_ICONS
-      : CURATED_ICONS.filter((e) => e.category === iconFilter)
+  const isSearching = debouncedQuery.length > 0
+
+  const searchResults: SearchResult[] = useMemo(() => {
+    if (!isSearching) return []
+    return searchIcons(debouncedQuery, 120)
+  }, [debouncedQuery, isSearching])
+
+  const suggestions = useMemo(() => {
+    if (!searchQuery || searchQuery.length < 2) return []
+    return getSearchSuggestions(searchQuery)
+  }, [searchQuery])
+
+  const filteredCurated: IconEntry[] = useMemo(() => {
+    if (iconFilter === 'all') return CURATED_ICONS
+    return CURATED_ICONS.filter((e) => e.category === iconFilter)
+  }, [iconFilter])
 
   const updateField = <K extends keyof typeof config>(key: K, value: (typeof config)[K]) => {
     setConfig({ ...config, [key]: value })
+  }
+
+  const handleIconSelect = (name: string) => {
+    updateField('icon', name)
+  }
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setSearchQuery(suggestion)
+    searchInputRef.current?.focus()
   }
 
   return (
@@ -146,36 +189,109 @@ export function LogoBuilder() {
 
       {/* Icon Picker */}
       <BentoCard colSpan={2} index={3}>
-        <h3 className="font-semibold mb-3">Icon</h3>
-        <div className="flex flex-wrap gap-1 mb-3">
-          {ICON_CATEGORIES.map((cat) => (
-            <Button
-              key={cat}
-              variant={iconFilter === cat ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setIconFilter(cat)}
-              className="capitalize text-xs h-7 px-2.5"
-            >
-              {cat}
-            </Button>
-          ))}
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold">Icon</h3>
+          {isSearching && (
+            <span className="text-xs text-muted-foreground">
+              {searchResults.length} result{searchResults.length !== 1 ? 's' : ''}
+            </span>
+          )}
         </div>
-        <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-10 gap-1.5 max-h-48 overflow-y-auto">
-          {filteredIcons.map((entry) => (
+
+        {/* Search input */}
+        <div className="relative mb-3">
+          <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search all 1500+ icons... try &quot;plant&quot;, &quot;money&quot;, &quot;arrow&quot;"
+            className="h-8 w-full rounded-lg border border-border bg-background pl-8 pr-8 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          {searchQuery && (
             <button
-              key={entry.name}
-              onClick={() => updateField('icon', entry.name)}
-              title={entry.name}
-              className={cn(
-                'flex items-center justify-center rounded-lg p-2 transition-colors',
-                config.icon === entry.name
-                  ? 'bg-primary/10 ring-2 ring-primary text-primary'
-                  : 'text-muted-foreground hover:bg-accent hover:text-foreground',
-              )}
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
-              <entry.icon className="h-5 w-5" />
+              <X className="h-3.5 w-3.5" />
             </button>
-          ))}
+          )}
+        </div>
+
+        {/* Search suggestions */}
+        {suggestions.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => handleSuggestionClick(s)}
+                className="rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Category tabs (only when not searching) */}
+        {!isSearching && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {ICON_CATEGORIES.map((cat) => (
+              <Button
+                key={cat}
+                variant={iconFilter === cat ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setIconFilter(cat)}
+                className="capitalize text-xs h-7 px-2.5"
+              >
+                {cat}
+              </Button>
+            ))}
+          </div>
+        )}
+
+        {/* Icon grid */}
+        <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-10 gap-1.5 max-h-64 overflow-y-auto p-1 -m-1">
+          {isSearching ? (
+            searchResults.length > 0 ? (
+              searchResults.map((result) => (
+                <button
+                  key={result.name}
+                  onClick={() => handleIconSelect(result.name)}
+                  title={result.name}
+                  className={cn(
+                    'flex items-center justify-center rounded-lg p-2 transition-colors',
+                    config.icon === result.name
+                      ? 'bg-primary/10 ring-2 ring-primary text-primary'
+                      : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+                  )}
+                >
+                  <result.component className="h-5 w-5" />
+                </button>
+              ))
+            ) : (
+              <div className="col-span-full py-6 text-center text-sm text-muted-foreground">
+                No icons found for &ldquo;{debouncedQuery}&rdquo;
+              </div>
+            )
+          ) : (
+            filteredCurated.map((entry) => (
+              <button
+                key={entry.name}
+                onClick={() => handleIconSelect(entry.name)}
+                title={entry.name}
+                className={cn(
+                  'flex items-center justify-center rounded-lg p-2 transition-colors',
+                  config.icon === entry.name
+                    ? 'bg-primary/10 ring-2 ring-primary text-primary'
+                    : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+                )}
+              >
+                <entry.icon className="h-5 w-5" />
+              </button>
+            ))
+          )}
         </div>
       </BentoCard>
 
