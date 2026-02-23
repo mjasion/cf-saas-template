@@ -55,7 +55,7 @@ function AuthPanelSvg() {
 export function AuthLayout({ children, title, description }: AuthLayoutProps) {
   return (
     <div className="flex min-h-screen items-center justify-center relative bg-background px-4 py-12">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-[#6363f1]/15 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/15 blur-[100px] pointer-events-none" />
       <div className="relative w-full max-w-sm md:max-w-4xl">
         <div className="mb-6 flex justify-center md:hidden">
           <Logo size="md" />
@@ -78,7 +78,7 @@ export function AuthLayout({ children, title, description }: AuthLayoutProps) {
               {children}
             </div>
 
-            <div className="relative hidden overflow-hidden rounded-r-2xl bg-gradient-to-br from-[#6363f1] to-[#23f0c3] md:block">
+            <div className="relative hidden overflow-hidden rounded-r-2xl md:block" style={{ background: 'var(--gradient-primary)' }}>
               <AuthPanelSvg />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">

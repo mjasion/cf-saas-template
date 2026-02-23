@@ -60,7 +60,7 @@ function LandingPage() {
             </div>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
               <span className="block">Build Your SaaS</span>
-              <span className="block bg-gradient-to-r from-[#6363f1] via-[#3498ea] to-[#40dfa3] bg-clip-text text-transparent">
+              <span className="block bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-primary)' }}>
                 On the Edge
               </span>
             </h1>
@@ -167,6 +167,11 @@ function LandingPage() {
             <p className="text-sm text-muted-foreground">
               Built with Cloudflare Workers, TanStack Start, and Hono.
             </p>
+            <div className="flex items-center gap-6">
+              <Link to="/themes" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Themes
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

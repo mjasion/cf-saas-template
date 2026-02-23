@@ -73,8 +73,8 @@ export const Route = createRootRoute({
     ],
     scripts: [
       {
-        // Inline script to prevent FOUC: apply theme from localStorage before paint
-        children: `(function(){try{var t=localStorage.getItem('app-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}})()`,
+        // Inline script to prevent FOUC: apply cached theme CSS variables before paint
+        children: `(function(){try{var m=localStorage.getItem('app-theme-mode')||'dark';var c=localStorage.getItem('app-theme-css');document.documentElement.setAttribute('data-theme',m);if(c){document.documentElement.setAttribute('style',c)}var l=localStorage.getItem('app-logo-config');if(l){document.documentElement.setAttribute('data-logo-config',l)}}catch(e){}})()`,
       },
     ],
   }),

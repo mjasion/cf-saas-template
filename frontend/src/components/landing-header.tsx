@@ -23,6 +23,12 @@ export function LandingHeader() {
             >
               How It Works
             </a>
+            <Link
+              to="/themes"
+              className="text-[var(--color-text-secondary)] hover:text-foreground font-medium transition-colors"
+            >
+              Themes
+            </Link>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -33,7 +39,7 @@ export function LandingHeader() {
               </Button>
             </Link>
             <Link to="/register">
-              <Button className="bg-[#23f0c3] text-[#030520] hover:bg-[#1dd4ad]">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                 Get Started
               </Button>
             </Link>
