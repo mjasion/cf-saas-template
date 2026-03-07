@@ -1,78 +1,29 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 ## Project Overview
 
 cf-saas-template is a reusable SaaS starter template built on Cloudflare's edge platform. It provides authentication, database, session management, and a modern UI out of the box. Clone it and extend it for new SaaS projects.
 
 ## Architecture
 
-```
-cf-saas-template/
-├── backend/                  # Hono API Worker
-│   ├── src/
-│   │   ├── index.ts          # App entry, Bindings type, routes
-│   │   ├── db/
-│   │   │   ├── index.ts      # createDb() / getDb()
-│   │   │   └── schema.ts     # Drizzle schema (users table)
-│   │   ├── lib/
-│   │   │   ├── auth.ts       # Argon2id hashing, password validation
-│   │   │   ├── jwt.ts        # JWT + refresh tokens + cookies
-│   │   │   └── duration.ts   # Duration parser ("15m" → 900)
-│   │   ├── middleware/
-│   │   │   ├── auth.ts       # requireAuth / optionalAuth / requireAdmin
-│   │   │   ├── error-handler.ts
-│   │   │   └── rate-limit.ts # KV-based rate limiting
-│   │   ├── routes/
-│   │   │   └── auth.ts       # register, login, logout, refresh, validate-session
-│   │   └── shared/
-│   │       └── types.ts      # Session interface
-│   ├── drizzle.config.ts
-│   ├── wrangler.jsonc
-│   └── package.json
-├── frontend/                 # TanStack Start Worker
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── bento/        # BentoGrid + BentoCard
-│   │   │   ├── layout/       # AuthLayout
-│   │   │   ├── ui/           # shadcn components
-│   │   │   ├── app-sidebar.tsx
-│   │   │   ├── nav-user.tsx
-│   │   │   └── landing-header.tsx
-│   │   ├── lib/
-│   │   │   ├── api-client.ts     # Service binding API client
-│   │   │   ├── auth-session.ts   # getServerSession() SSR
-│   │   │   ├── cookie-forward.ts # SSR cookie forwarding
-│   │   │   ├── use-theme.ts      # Dark/light theme hook
-│   │   │   ├── use-mobile.ts     # Mobile detection
-│   │   │   └── utils.ts          # cn() helper
-│   │   ├── routes/
-│   │   │   ├── __root.tsx        # Root layout
-│   │   │   ├── index.tsx         # Landing page
-│   │   │   ├── login.tsx
-│   │   │   ├── register.tsx
-│   │   │   ├── dashboard.tsx     # Auth guard + sidebar layout
-│   │   │   └── dashboard.index.tsx
-│   │   └── styles/
-│   │       └── global.css        # Tailwind 4 + theme tokens
-│   ├── public/robots.txt
-│   ├── app.config.ts
-│   ├── vite.config.ts
-│   ├── wrangler.jsonc
-│   └── package.json
-├── scripts/
-│   ├── lib/utils.sh          # Naming, logging, resource helpers
-│   ├── deploy.sh             # Full deployment pipeline
-│   └── setup-env.sh          # Create D1, KV, configure wrangler
-├── e2e/
-│   └── auth.spec.ts          # Playwright auth flow tests
-├── .github/workflows/
-│   └── deploy.yml            # CI/CD with semantic versioning
-├── eslint.config.js
-├── playwright.config.ts
-├── pnpm-workspace.yaml
-├── renovate.json5
-└── package.json
-```
+**Monorepo with two Cloudflare Workers** managed by pnpm workspaces:
+
+- `backend/` — Hono API Worker (port 8788). Handles auth, database, and business logic. Routes are prefixed `/a/`.
+- `frontend/` — TanStack Start Worker (port 3000). React 19 SSR with file-based routing. Calls backend via Cloudflare service binding (no HTTP round-trip).
+
+**Frontend → Backend communication**: The frontend worker calls the backend worker directly using a Cloudflare service binding (`env.API.fetch()`). In SSR server functions, `env` is imported from `cloudflare:workers`. The base URL `http://api.internal` is used (hostname is ignored by the service binding; only the path matters). Cookies are forwarded from the browser request to the backend and `Set-Cookie` headers are forwarded back.
+
+**Key architectural files**:
+- `backend/src/index.ts` — App entry, `Bindings` type, route mounting
+- `backend/src/db/schema.ts` — Drizzle schema (users table)
+- `backend/src/lib/jwt.ts` — JWT + refresh tokens + cookie management
+- `backend/src/middleware/auth.ts` — `requireAuth` / `optionalAuth` / `requireAdmin`
+- `frontend/src/lib/api-client.ts` — Service binding API client
+- `frontend/src/lib/auth-session.ts` — `getServerSession()` SSR function
+- `frontend/src/routes/__root.tsx` — Root layout, FOUC prevention script
+- `frontend/src/routes/dashboard.tsx` — Auth guard + sidebar layout
 
 ## Tech Stack
 
@@ -86,33 +37,55 @@ cf-saas-template/
 - **Icons**: Lucide React
 - **Auth**: JWT access tokens (stateless) + KV refresh tokens (stateful)
 - **Password Hashing**: Argon2id (t=3, m=8193, p=1) via @noble/hashes
-- **Monorepo**: pnpm workspaces
 - **E2E Testing**: Playwright
 - **CI/CD**: GitHub Actions + 1Password for secrets
 
 ## Development Commands
 
 ```bash
-# Root
+# Development
 pnpm install                   # Install all workspace deps
-pnpm dev                       # Start backend (8788) + frontend (3000)
+pnpm dev                       # Start backend (8788) + frontend (3000) concurrently
+pnpm dev:backend               # Start backend only
+pnpm dev:frontend              # Start frontend only
 pnpm build                     # Build both workers
-pnpm deploy                    # Deploy both workers
 pnpm typecheck                 # TypeScript check across all packages
 pnpm lint                      # ESLint
-pnpm format                    # Prettier
+pnpm lint:fix                  # ESLint with auto-fix
+pnpm format                    # Prettier write
+pnpm format:check              # Prettier check only
 
 # Database
-pnpm db:generate               # Generate Drizzle migration from schema
+pnpm db:generate               # Generate Drizzle migration from schema changes
 pnpm db:migrate                # Apply migrations locally
 pnpm db:migrate:prod           # Apply migrations to remote D1
+pnpm db:seed                   # Seed local DB with admin user
+pnpm db:reset                  # Wipe local DB, re-apply migrations, and re-seed
 pnpm db:studio                 # Open Drizzle Studio
 
-# E2E tests (auto-starts dev servers)
-pnpm test:e2e                  # Headed
-pnpm test:e2e:headless         # Headless
+# E2E tests (auto-starts dev servers via webServer config)
+pnpm test:e2e                  # Headed (all browsers)
+pnpm test:e2e:headless         # Headless (all browsers)
 pnpm test:e2e:ui               # Playwright UI mode
+pnpm test:e2e:report           # View last test report
+
+# Run a single E2E test file
+npx playwright test e2e/auth.spec.ts
+# Run a specific test by name
+npx playwright test -g "test name"
+# Run in a specific browser
+npx playwright test --project=chromium
 ```
+
+### Seed Data (local dev only)
+
+`pnpm db:seed` creates a default admin user:
+
+| Field    | Value             |
+| -------- | ----------------- |
+| Email    | `admin@localhost` |
+| Password | `admin`           |
+| Role     | `admin`           |
 
 ## Environment Variables & Bindings
 
@@ -262,23 +235,14 @@ Cards use `bento-fade-in` with stagger animation (100ms increments via `index` p
 
 ## UI Components (shadcn/ui)
 
-Components in `frontend/src/components/ui/`:
-
-button, card, input, label, separator, tooltip, skeleton, sheet,
-dropdown-menu, sidebar, theme-toggle, logo
+Components in `frontend/src/components/ui/`. Add new ones with `npx shadcn@latest add <name>` from the `frontend/` directory.
 
 ### Conventions
 
 - Import: `import { Button } from "@/components/ui/button"`
 - Class merging: `import { cn } from "@/lib/utils"`
 - Never modify shadcn base components directly — create wrapper components
-- Add new components: `npx shadcn@latest add <name>` (from `frontend/`)
-
-### Sidebar Pattern
-
 - `SidebarProvider` wraps dashboard layout in `dashboard.tsx`
-- `AppSidebar` has navigation groups (Overview: Dashboard, System: Settings)
-- `NavUser` renders user email, theme toggle, settings, logout
 - Test IDs: `app-sidebar`, `nav-user-trigger`, `logout-button`
 
 ## Code Conventions
@@ -289,12 +253,8 @@ dropdown-menu, sidebar, theme-toggle, logo
 - Path aliases: `@/*` → `src/*`
 - Prefer `interface` over `type` for object shapes
 - Never use `any` — prefer `unknown` with type guards
-
-### Error Handling
-
-- Backend returns `{ user: ... }` on success, `{ error: "message" }` on failure
-- Frontend shows errors in inline alert boxes within forms
-- Never expose stack traces or internal details to the client
+- Use `type` imports when importing only types (`import type { Foo }`)  — enforced by ESLint `consistent-type-imports`
+- Unused vars prefixed with `_` are allowed
 
 ### File Naming
 
@@ -302,6 +262,11 @@ dropdown-menu, sidebar, theme-toggle, logo
 - Utilities: camelCase (`utils.ts`)
 - Routes: kebab-case matching URLs (`dashboard.index.tsx`)
 - Schema: camelCase in code, snake_case in SQL columns
+
+### Error Handling
+
+- Backend returns `{ user: ... }` on success, `{ error: "message" }` on failure
+- Frontend shows errors in inline alert boxes within forms
 
 ## Critical Rules
 
@@ -331,25 +296,12 @@ dropdown-menu, sidebar, theme-toggle, logo
 
 ## Deployment
 
-### Initial Setup
-
 ```bash
+# Initial setup
 ./scripts/setup-env.sh <env-name>   # Creates D1, KV, updates wrangler configs
 cd backend && wrangler secret put JWT_SECRET
 pnpm db:migrate:prod
-```
 
-### Deploy
-
-```bash
+# Deploy
 ./scripts/deploy.sh <env-name>      # Migrations + build + deploy both workers
 ```
-
-### Environment Checklist
-
-- [ ] D1 database created, ID in `backend/wrangler.jsonc`
-- [ ] KV namespace created, ID in `backend/wrangler.jsonc`
-- [ ] `JWT_SECRET` set via `wrangler secret put`
-- [ ] `APP_COOKIE_PREFIX` set in both wrangler configs
-- [ ] Migrations applied
-- [ ] Service binding name matches backend worker name
