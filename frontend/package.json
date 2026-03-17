@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "^1.28.0",
+    "@cloudflare/vite-plugin": "^1.29.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.8",
@@ -18,12 +18,12 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.2.1",
-    "@tanstack/react-router": "^1.167.0",
-    "@tanstack/react-start": "^1.166.11",
-    "@tanstack/router-plugin": "^1.166.9",
+    "@tanstack/react-router": "^1.167.4",
+    "@tanstack/react-start": "^1.166.15",
+    "@tanstack/router-plugin": "^1.166.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.36.0",
+    "framer-motion": "^12.37.0",
     "lucide-react": "^0.565.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -34,12 +34,12 @@
     "vite-tsconfig-paths": "^6.1.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260313.1",
+    "@cloudflare/workers-types": "^4.20260317.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "wrangler": "^4.73.0"
+    "wrangler": "^4.74.0"
   }
 }
