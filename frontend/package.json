@@ -19,8 +19,8 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-router": "^1.168.23",
-    "@tanstack/react-start": "^1.167.42",
-    "@tanstack/router-plugin": "^1.167.22",
+    "@tanstack/react-start": "^1.167.43",
+    "@tanstack/router-plugin": "^1.167.23",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
@@ -34,7 +34,7 @@
     "vite-tsconfig-paths": "^6.1.1"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260423.1",
+    "@cloudflare/workers-types": "^4.20260424.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.2.0",
