@@ -21,11 +21,11 @@
     "@hono/zod-validator": "^0.7.6",
     "@noble/hashes": "^2.2.0",
     "drizzle-orm": "^0.45.2",
-    "hono": "^4.12.17",
+    "hono": "^4.12.18",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260506.1",
+    "@cloudflare/workers-types": "^4.20260507.1",
     "@types/node": "^24.12.2",
     "drizzle-kit": "^0.31.10",
     "typescript": "^5.9.3",
