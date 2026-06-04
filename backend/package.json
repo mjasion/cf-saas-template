@@ -25,8 +25,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260603.1",
-    "@types/node": "^24.12.4",
+    "@cloudflare/workers-types": "^4.20260604.1",
+    "@types/node": "^24.13.0",
     "drizzle-kit": "^0.31.10",
     "typescript": "^5.9.3",
     "wrangler": "^4.97.0"
