@@ -37,7 +37,7 @@ importers:
     dependencies:
       '@hono/zod-validator':
         specifier: ^0.7.6
-        version: 0.7.6(hono@4.12.27)(zod@4.4.3)
+        version: 0.7.6(hono@4.12.28)(zod@4.4.3)
       '@noble/hashes':
         specifier: ^2.2.0
         version: 2.2.0
@@ -45,8 +45,8 @@ importers:
         specifier: ^0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260702.1)
       hono:
-        specifier: ^4.12.27
-        version: 4.12.27
+        specifier: ^4.12.28
+        version: 4.12.28
       zod:
         specifier: ^4.4.3
         version: 4.4.3
@@ -1957,8 +1957,8 @@ packages:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
 
-  caniuse-lite@1.0.30001800:
-    resolution: {integrity: sha512-MMHtuAz9Ys840zAY5F4k6fV5GaivZ9sPk+nz0mY+GYVzRBnYkN0mpqkSR92oWRQ19yQWo4HvBV/FnC16AJX8MA==}
+  caniuse-lite@1.0.30001802:
+    resolution: {integrity: sha512-vmv8ub2xwTNmljSKf82mtCk5JH7hC+YgzLj3P5zotvA0tPQ9016tdNNOG8WRca1IxOnhSsivB+J0z5FeE5LOUw==}
 
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
@@ -2461,8 +2461,8 @@ packages:
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
-  hono@4.12.27:
-    resolution: {integrity: sha512-1yrb/+w6HWQJrUCLkJ2IF5jNIPvvFkblV5RNOYl6bV+OA6p9GLcMpHFFGTosSvHvcAUibuUukRqhlYI4z32C7Q==}
+  hono@4.12.28:
+    resolution: {integrity: sha512-YwUvVpSF7m1yOblFPrU3Hbo8XhPheBoiyfGuII6z19LnOr6JpDnyyp7LFNrfV56wS8tpvtBFGRISHN02pDdLOA==}
     engines: {node: '>=16.9.0'}
 
   ignore@5.3.2:
@@ -3910,9 +3910,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.11': {}
 
-  '@hono/zod-validator@0.7.6(hono@4.12.27)(zod@4.4.3)':
+  '@hono/zod-validator@0.7.6(hono@4.12.28)(zod@4.4.3)':
     dependencies:
-      hono: 4.12.27
+      hono: 4.12.28
       zod: 4.4.3
 
   '@humanfs/core@0.19.2':
@@ -5011,7 +5011,7 @@ snapshots:
   browserslist@4.28.4:
     dependencies:
       baseline-browser-mapping: 2.10.42
-      caniuse-lite: 1.0.30001800
+      caniuse-lite: 1.0.30001802
       electron-to-chromium: 1.5.387
       node-releases: 2.0.50
       update-browserslist-db: 1.2.3(browserslist@4.28.4)
@@ -5037,7 +5037,7 @@ snapshots:
 
   callsites@3.1.0: {}
 
-  caniuse-lite@1.0.30001800: {}
+  caniuse-lite@1.0.30001802: {}
 
   chalk@4.1.2:
     dependencies:
@@ -5617,7 +5617,7 @@ snapshots:
     dependencies:
       hermes-estree: 0.25.1
 
-  hono@4.12.27: {}
+  hono@4.12.28: {}
 
   ignore@5.3.2: {}
 
