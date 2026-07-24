@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "^1.46.0",
+    "@cloudflare/vite-plugin": "^1.47.0",
     "@radix-ui/react-dialog": "^1.1.21",
     "@radix-ui/react-dropdown-menu": "^2.1.22",
     "@radix-ui/react-label": "^2.1.13",
@@ -40,6 +40,6 @@
     "@vitejs/plugin-react": "^5.2.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.6",
-    "wrangler": "^4.113.0"
+    "wrangler": "^4.114.0"
   }
 }
