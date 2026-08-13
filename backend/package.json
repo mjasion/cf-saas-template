@@ -29,6 +29,6 @@
     "@types/node": "^24.13.3",
     "drizzle-kit": "^0.31.10",
     "typescript": "^5.9.3",
-    "wrangler": "^4.121.0"
+    "wrangler": "^4.122.0"
   }
 }
