@@ -21,7 +21,7 @@
     "@hono/zod-validator": "^0.7.6",
     "@noble/hashes": "^2.3.0",
     "drizzle-orm": "^0.45.2",
-    "hono": "^4.13.2",
+    "hono": "^4.13.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -29,6 +29,6 @@
     "@types/node": "^24.13.3",
     "drizzle-kit": "^0.31.10",
     "typescript": "^5.9.3",
-    "wrangler": "^4.123.0"
+    "wrangler": "^4.124.0"
   }
 }
