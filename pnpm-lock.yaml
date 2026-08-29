@@ -37,7 +37,7 @@ importers:
     dependencies:
       '@hono/zod-validator':
         specifier: ^0.7.6
-        version: 0.7.6(hono@4.13.5)(zod@4.5.1)
+        version: 0.7.6(hono@4.13.5)(zod@4.5.2)
       '@noble/hashes':
         specifier: ^2.4.0
         version: 2.4.0
@@ -48,8 +48,8 @@ importers:
         specifier: ^4.13.5
         version: 4.13.5
       zod:
-        specifier: ^4.5.1
-        version: 4.5.1
+        specifier: ^4.5.2
+        version: 4.5.2
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20260702.1
@@ -3358,8 +3358,8 @@ packages:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
     engines: {node: '>=8'}
 
-  string.prototype.matchall@4.0.12:
-    resolution: {integrity: sha512-6CC9uyBL+/48dYizRf7H7VAYCMCNTBeM78x/VTUe9bFEaxBepPJDa1Ow99LqI/1yF7kuy7Q3cQsYMrcjGUcskA==}
+  string.prototype.matchall@4.1.0:
+    resolution: {integrity: sha512-tHNHTxInrYLCga9O9YGxWA3G9/nnzQw8UGAyqGx3Ar1pSTTzIuM4woFSq4SowkXCjJIwq5sIiQvEfRI9tCH1qQ==}
     engines: {node: '>= 0.4'}
 
   string.prototype.repeat@1.0.0:
@@ -3707,8 +3707,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@4.5.1:
-    resolution: {integrity: sha512-P3GqeAEOEDqKvafVGLezbg+39YW/ze4xrD4qdS0adOY8eoI3zfjv1PQM4UwQzgT8mZKXEbqtVt8K+ZKGqkMFKg==}
+  zod@4.5.2:
+    resolution: {integrity: sha512-XkYXCol10+ba/6F/cueWV+TezUeOqXW0hdeJt5CdXjTYeAgAQg5N03RQdJ80mhfFE72+pblvYMW4wy2Qp4Qbrg==}
 
 snapshots:
 
@@ -4252,10 +4252,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@hono/zod-validator@0.7.6(hono@4.13.5)(zod@4.5.1)':
+  '@hono/zod-validator@0.7.6(hono@4.13.5)(zod@4.5.2)':
     dependencies:
       hono: 4.13.5
-      zod: 4.5.1
+      zod: 4.5.2
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -5009,7 +5009,7 @@ snapshots:
       jiti: 2.7.0
       magic-string: 0.30.21
       prettier: 3.9.6
-      zod: 4.5.1
+      zod: 4.5.2
     transitivePeerDependencies:
       - supports-color
 
@@ -5023,7 +5023,7 @@ snapshots:
       '@tanstack/router-utils': 1.162.2
       chokidar: 5.0.0
       unplugin: 3.3.0(esbuild@0.28.2)(rollup@4.63.1)(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.23.12))
-      zod: 4.5.1
+      zod: 4.5.2
     optionalDependencies:
       '@tanstack/react-router': 1.170.32(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       vite: 7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.23.12)
@@ -5080,7 +5080,7 @@ snapshots:
       ufo: 1.6.4
       vitefu: 1.1.3(vite@7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.23.12))
       xmlbuilder2: 4.0.3
-      zod: 4.5.1
+      zod: 4.5.2
     optionalDependencies:
       vite: 7.3.6(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(tsx@4.23.12)
     transitivePeerDependencies:
@@ -5763,8 +5763,8 @@ snapshots:
       '@babel/parser': 7.29.8
       eslint: 9.39.5(jiti@2.7.0)
       hermes-parser: 0.25.1
-      zod: 4.5.1
-      zod-validation-error: 4.0.2(zod@4.5.1)
+      zod: 4.5.2
+      zod-validation-error: 4.0.2(zod@4.5.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -5787,7 +5787,7 @@ snapshots:
       prop-types: 15.8.1
       resolve: 2.0.0-next.7
       semver: 6.3.1
-      string.prototype.matchall: 4.0.12
+      string.prototype.matchall: 4.1.0
       string.prototype.repeat: 1.0.0
 
   eslint-scope@8.4.0:
@@ -6731,7 +6731,7 @@ snapshots:
       is-fullwidth-code-point: 3.0.0
       strip-ansi: 6.0.1
 
-  string.prototype.matchall@4.0.12:
+  string.prototype.matchall@4.1.0:
     dependencies:
       call-bind: 1.0.9
       call-bound: 1.0.4
@@ -7078,8 +7078,8 @@ snapshots:
       cookie: 1.1.1
       youch-core: 0.3.3
 
-  zod-validation-error@4.0.2(zod@4.5.1):
+  zod-validation-error@4.0.2(zod@4.5.2):
     dependencies:
-      zod: 4.5.1
+      zod: 4.5.2
 
-  zod@4.5.1: {}
+  zod@4.5.2: {}
