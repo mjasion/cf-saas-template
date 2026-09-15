@@ -21,7 +21,7 @@
     "@hono/zod-validator": "^0.7.6",
     "@noble/hashes": "^2.4.0",
     "drizzle-orm": "^0.45.2",
-    "hono": "^4.13.7",
+    "hono": "^4.13.8",
     "zod": "^4.6.5"
   },
   "devDependencies": {
