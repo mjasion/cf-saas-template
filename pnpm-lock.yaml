@@ -2899,8 +2899,8 @@ packages:
       encoding:
         optional: true
 
-  node-releases@2.0.65:
-    resolution: {integrity: sha512-PfvofsGQ+MiOQIPkX9fU8ELUWmy5zL74CdQaph/ismKszfFkfwXaw0cGiwbwym2hT9k5+mdyl8O5WQ1MD8EHmA==}
+  node-releases@2.0.66:
+    resolution: {integrity: sha512-uSMWN9/XtWzxaE0d9ZNHe00Hda6028AXH3WRjTsK71neiPCSeL5nGSD9MXTQX/6Qx0k7Op1AyyinmIUw9fBzrg==}
     engines: {node: '>=18'}
 
   object-assign@4.1.1:
@@ -5236,7 +5236,7 @@ snapshots:
       baseline-browser-mapping: 2.11.39
       caniuse-lite: 1.0.30001828
       electron-to-chromium: 1.5.494
-      node-releases: 2.0.65
+      node-releases: 2.0.66
       update-browserslist-db: 1.4.0(browserslist@4.29.6)
 
   buffer-from@1.1.2: {}
@@ -6189,7 +6189,7 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  node-releases@2.0.65: {}
+  node-releases@2.0.66: {}
 
   object-assign@4.1.1: {}
 
